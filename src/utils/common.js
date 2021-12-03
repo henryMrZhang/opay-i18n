@@ -55,7 +55,9 @@ function getFlatJsonByLang(lang) {
     );
     const flatNestedObj = getFlatNestedObj(pathJsonMap[path]);
     for (let key in flatNestedObj) {
-      result[`${fileRelativePathForDotSplit}.${key}`] = flatNestedObj[key];
+      if (flatNestedObj[key] !== "") {
+        result[`${fileRelativePathForDotSplit}.${key}`] = flatNestedObj[key];
+      }
     }
   }
   return result;
