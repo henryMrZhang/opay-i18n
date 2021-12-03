@@ -9,13 +9,22 @@ const { getFlatJsonByLang, getDifferenceData } = require("./common");
 function findAllLanguageRankByConfig() {
   const { jsonKeys } = require("../config.json");
   let rankLanguageArr = [];
-  let truefile = jsonKeys.filter((e) => e["key"] !== "key");
-  truefile.forEach((route) => {
+  let trueFile = jsonKeys.filter((e) => e["key"] !== "key");
+  trueFile.forEach((route) => {
     rankLanguageArr.push(route["key"]);
-    let file = `./src/locales/lang/${route["key"]}`;
-    fse.ensureDirSync(file); //没有就创建文件夹，有不改变
   });
-  return rankLanguageArr;
+  let rankLanguageArres = [...rankLanguageArr];
+  let trueLangDirArr = [];
+  fse.readdirSync("./src/locales/lang").forEach((item) => {
+    trueLangDirArr.push(item);
+    if (!rankLanguageArr.includes(item)) {
+      rankLanguageArres.push(item);
+    }
+  });
+  const result = rankLanguageArres.filter((item) =>
+    trueLangDirArr.includes(item)
+  );
+  return result;
 }
 /**
  * 生成Excel数据

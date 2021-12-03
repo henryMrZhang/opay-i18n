@@ -2,6 +2,7 @@
   "jsonKeys": [
     { "header": "key", "key": "key" },
     { "header": "zh-CN", "key": "zh-CN" },
-    { "header": "en-US", "key": "en-US" }
+    { "header": "en-US", "key": "en-US" },
+    { "header": "ar-EG", "key": "ar-EG" }
   ]
 }
