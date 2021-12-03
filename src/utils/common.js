@@ -1,5 +1,5 @@
-const fse = require('fs-extra');
-const glob = require('glob');
+const fse = require("fs-extra");
+const glob = require("glob");
 /**
  * 拍平嵌套的JSON
  * @param {*} nestedJson 嵌套JSON
@@ -9,19 +9,19 @@ const glob = require('glob');
  * => { a: 1, b.c : 2 }
  */
 function getFlatNestedObj(nestedJson) {
-    const result = {}
-    function fn(obj, prefix) {
-        for (key in obj) {
-            let fullKey = prefix ? prefix + '.' + key : key
-            if (typeof obj[key] === 'object') {
-                fn(obj[key], fullKey)
-            } else {
-                result[fullKey] = obj[key]
-            }
-        }
+  const result = {};
+  function fn(obj, prefix) {
+    for (key in obj) {
+      let fullKey = prefix ? prefix + "." + key : key;
+      if (typeof obj[key] === "object") {
+        fn(obj[key], fullKey);
+      } else {
+        result[fullKey] = obj[key];
+      }
     }
-    fn(nestedJson)
-    return result
+  }
+  fn(nestedJson);
+  return result;
 }
 /**
  * 根据语言码获取某语言的路径与数据的映射
@@ -31,14 +31,14 @@ function getFlatNestedObj(nestedJson) {
  * const result = getPathJsonMapByLang('zh-CN')
  * => { './src/locales/lang/zh-CN/demo.json': { a: 1, b: { c: 2 } } }
  */
- function getPathJsonMapByLang(lang) {
-    const result = {}
-    const filePathList = glob.sync(`./src/locales/lang/${lang}/**/*.json`)
-    filePathList.forEach(filePath => {
-        const fileJson = fse.readJsonSync(filePath)
-        result[filePath] = fileJson
-    })
-    return result
+function getPathJsonMapByLang(lang) {
+  const result = {};
+  const filePathList = glob.sync(`./src/locales/lang/${lang}/**/*.json`);
+  filePathList.forEach((filePath) => {
+    const fileJson = fse.readJsonSync(filePath);
+    result[filePath] = fileJson;
+  });
+  return result;
 }
 /**
  * 获取某语言的所有文件的拍平数据
@@ -46,16 +46,19 @@ function getFlatNestedObj(nestedJson) {
  * @ returns 所有文件的拍平数据
  */
 function getFlatJsonByLang(lang) {
-    const result = {}
-    const pathJsonMap = getPathJsonMapByLang(lang)
-    for (let path in pathJsonMap) {
-        const fileRelativePathForDotSplit = getFileRelativePathForDotSplit(lang, path)
-        const flatNestedObj = getFlatNestedObj(pathJsonMap[path])
-        for (let key in flatNestedObj) {
-            result[`${fileRelativePathForDotSplit}.${key}`] = flatNestedObj[key]
-        }
+  const result = {};
+  const pathJsonMap = getPathJsonMapByLang(lang);
+  for (let path in pathJsonMap) {
+    const fileRelativePathForDotSplit = getFileRelativePathForDotSplit(
+      lang,
+      path
+    );
+    const flatNestedObj = getFlatNestedObj(pathJsonMap[path]);
+    for (let key in flatNestedObj) {
+      result[`${fileRelativePathForDotSplit}.${key}`] = flatNestedObj[key];
     }
-    return result
+  }
+  return result;
 }
 /**
  * 根据语言获取文件相对路径按点分割
@@ -66,12 +69,12 @@ function getFlatJsonByLang(lang) {
  * const result = getFileRelativePathForDotSplit('zh-CN', './src/locales/lang/zh-CN/a/b.json')
  * => a.b
  */
- function getFileRelativePathForDotSplit(lang, filePath) {
-    const result = filePath
-        .replace(`./src/locales/lang/${lang}/`, '')
-        .replace('.json', '')
-        .replace(/\//g, '.')
-    return result
+function getFileRelativePathForDotSplit(lang, filePath) {
+  const result = filePath
+    .replace(`./src/locales/lang/${lang}/`, "")
+    .replace(".json", "")
+    .replace(/\//g, ".");
+  return result;
 }
 /**
  * 获取数组差集
@@ -82,13 +85,13 @@ function getFlatJsonByLang(lang) {
  * => [2]
  * @returns 差集数据
  */
- function getDifferenceData(allArray, partArray) {
-    const result = allArray.filter(item => !partArray.includes(item))
-    return result
+function getDifferenceData(allArray, partArray) {
+  const result = allArray.filter((item) => !partArray.includes(item));
+  return result;
 }
 module.exports = {
-    getFlatNestedObj,
-    getFlatJsonByLang,
-    getFileRelativePathForDotSplit,
-    getDifferenceData
-}
+  getFlatNestedObj,
+  getFlatJsonByLang,
+  getFileRelativePathForDotSplit,
+  getDifferenceData,
+};
